@@ -37,14 +37,15 @@ func proc(m config.LineDiff) error {
 		channel = m.Tags[0]
 	}
 	channel = "#" + channel
+
+	str, e := json.Marshal(config.Webhook{
+		Text: m.Line,
+		Channel: channel,
+		Username: config.C.Username,
+		IconEmoji: config.C.IconEmoji,
+	})
 	res, e := http.PostForm(
-		config.C.Url,
-		url.Values{
-			"payload": {m.Line},
-			"channel": {channel},
-			"username": {config.C.Username},
-			"icon_emoji": {config.C.IconEmoji},
-		},
+		config.C.Url, url.Values{"payload": {string(str)}},
 	)
 	if e != nil {
 		return e
@@ -55,7 +56,7 @@ func proc(m config.LineDiff) error {
 		if e != nil {
 			return e
 		}
-		return errors.New("HTTP != 200, txt=" + string(txt))
+		return errors.New(fmt.Sprintf("HTTP=%d, txt=%s", res.StatusCode, string(txt)))
 	}
 	return nil
 }

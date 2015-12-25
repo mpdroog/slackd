@@ -28,6 +28,13 @@ type LineDiff struct {
 	Tags     []string
 }
 
+type Webhook struct {
+	Channel string   `json:"channel"`
+	Username  string `json:"username"`
+	IconEmoji string `json:"icon_emoji"`
+	Text string      `json:"text"`
+}
+
 func Init(path string) error {
 	b, e := ioutil.ReadFile(path)
 	if e != nil {
