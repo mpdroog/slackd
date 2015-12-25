@@ -1,0 +1,6 @@
+{
+	"url": "https://hooks.slack.com/services/XX/XX/XX",
+	"username": "Monkey",
+	"iconEmoji": ":monkey_face:",
+	"beanstalk": "127.0.0.1:11300"
+}
