@@ -37,13 +37,53 @@ func proc(m config.LineDiff) error {
 		channel = m.Tags[0]
 	}
 	channel = "#" + channel
-
+/*
+type WebhookAttachmentField struct {
+	Title string `json:"title"`
+	Value string `json:"value"`
+	Short bool `json:"short"`
+}
+type WebhookAttachment struct {
+	Fallback string `json:"fallback"`
+	Pretext string `json:"pretext"`
+	Text string `json:"text"`
+	Fields []WebhookAttachmentField `json:"fields"`
+}
+type Webhook struct {
+	Channel string   `json:"channel"`
+	Username  string `json:"username"`
+	IconEmoji string `json:"icon_emoji"`
+	Text string      `json:"text"`
+	Attachments []WebhookAttachment `json:"attachments"`
+}
+*/
 	str, e := json.Marshal(config.Webhook{
+		Text: "",
+		Channel: channel,
+		Username: config.C.Username,
+		IconEmoji: config.C.IconEmoji,
+		Attachments: []config.WebhookAttachment{config.WebhookAttachment{
+			Fallback: "File changed",
+			Pretext: m.Hostname + ":" + m.Path,
+			Text: m.Line,
+			Fields: []config.WebhookAttachmentField{config.WebhookAttachmentField{
+				Title: "Hostname",
+				Value: m.Hostname,
+				Short: true,
+			}, config.WebhookAttachmentField{
+				Title: "Date",
+				Value: time.Now().Format("2006-Jan-02 15:04"),
+				Short: true,
+			}},
+		}},
+	})
+/*	str, e := json.Marshal(config.Webhook{
 		Text: m.Line,
 		Channel: channel,
 		Username: config.C.Username,
 		IconEmoji: config.C.IconEmoji,
 	})
+*/
 	res, e := http.PostForm(
 		config.C.Url, url.Values{"payload": {string(str)}},
 	)

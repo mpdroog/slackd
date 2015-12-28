@@ -28,11 +28,23 @@ type LineDiff struct {
 	Tags     []string
 }
 
+type WebhookAttachmentField struct {
+	Title string `json:"title"`
+	Value string `json:"value"`
+	Short bool `json:"short"`
+}
+type WebhookAttachment struct {
+	Fallback string `json:"fallback"`
+	Pretext string `json:"pretext"`
+	Text string `json:"text"`
+	Fields []WebhookAttachmentField `json:"fields"`
+}
 type Webhook struct {
 	Channel string   `json:"channel"`
 	Username  string `json:"username"`
 	IconEmoji string `json:"icon_emoji"`
 	Text string      `json:"text"`
+	Attachments []WebhookAttachment `json:"attachments"`
 }
 
 func Init(path string) error {
