@@ -1,0 +1,6 @@
+{
+	"Hostname": "ufs02.itshosted.nl",
+	"Path": "/var/log/nntpd/stdout.log",
+	"Line": "Dec 28 03:35:03 ufs2 postfix/local[28128]: 4BC4F8C0B05: to=<root@ufs2.usenet.farm>, orig_to=<root>, relay=local, delay=0.09, delays=0.05/0/0/0.04, dsn=5.2.2, status=bounced (cannot update mailbox /var/mail/root for user root. error writing message: File too large)\nDec 28 03:35:03 ufs2 postfix/cleanup[28126]: 5C1208C0B06: message-id=<20151228023503.5C1208C0B06@ufs2.usenet.farm>\nDec 28 03:35:03 ufs2 postfix/bounce[28129]: 4BC4F8C0B05: sender non-delivery notification: 5C1208C0B06\nDec 28 03:35:03 ufs2 postfix/qmgr[2495]: 5C1208C0B06: from=<>, size=2414, nrcpt=1 (queue active)\nDec 28 03:35:03 ufs2 postfix/qmgr[2495]: 4BC4F8C0B05: removed\nDec 28 03:35:03 ufs2 postfix/local[28128]: 5C1208C0B06: to=<root@ufs2.usenet.farm>, relay=local, delay=0.03, delays=0.01/0/0/0.02, dsn=5.2.2, status=bounced (cannot update mailbox /var/mail/root for user root. error writing message: File too large)\nDec 28 03:35:03 ufs2 postfix/qmgr[2495]: 5C1208C0B06: removed",
+	"Tags": ["general"]
+}
