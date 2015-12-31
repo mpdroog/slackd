@@ -14,7 +14,6 @@ import (
 	"github.com/mpdroog/beanstalkd" //"github.com/maxid/beanstalkd"
 )
 
-var readonly bool
 const ERR_WAIT_SEC = 5
 
 func connect() (*beanstalkd.BeanstalkdClient, error) {
@@ -22,7 +21,6 @@ func connect() (*beanstalkd.BeanstalkdClient, error) {
 	if e != nil {
 		return nil, e
 	}
-	// Only listen to email queue.
 	queue.Use("slack")
 	if _, e := queue.Watch("slack"); e != nil {
 		return nil, e
@@ -37,26 +35,7 @@ func proc(m config.LineDiff) error {
 		channel = m.Tags[0]
 	}
 	channel = "#" + channel
-/*
-type WebhookAttachmentField struct {
-	Title string `json:"title"`
-	Value string `json:"value"`
-	Short bool `json:"short"`
-}
-type WebhookAttachment struct {
-	Fallback string `json:"fallback"`
-	Pretext string `json:"pretext"`
-	Text string `json:"text"`
-	Fields []WebhookAttachmentField `json:"fields"`
-}
-type Webhook struct {
-	Channel string   `json:"channel"`
-	Username  string `json:"username"`
-	IconEmoji string `json:"icon_emoji"`
-	Text string      `json:"text"`
-	Attachments []WebhookAttachment `json:"attachments"`
-}
-*/
+
 	str, e := json.Marshal(config.Webhook{
 		Text: "",
 		Channel: channel,
@@ -77,13 +56,6 @@ type Webhook struct {
 			}},
 		}},
 	})
-/*	str, e := json.Marshal(config.Webhook{
-		Text: m.Line,
-		Channel: channel,
-		Username: config.C.Username,
-		IconEmoji: config.C.IconEmoji,
-	})
-*/
 	res, e := http.PostForm(
 		config.C.Url, url.Values{"payload": {string(str)}},
 	)
@@ -105,7 +77,6 @@ func main() {
 	var configPath string
 	flag.BoolVar(&config.Verbose, "v", false, "Show all that happens")
 	flag.StringVar(&configPath, "c", "./config.json", "Configuration")
-	flag.BoolVar(&readonly, "r", false, "Don't email but flush to stdout")
 	flag.Parse()
 
 	if e := config.Init(configPath); e != nil {
@@ -121,9 +92,6 @@ func main() {
 	}
 	if config.Verbose {
 		fmt.Println("SlackD(" + config.Hostname + ") slack-tube (ignoring default)")
-	}
-	if readonly {
-		fmt.Println("!! ReadOnly mode !!")
 	}
 
 	for {
@@ -154,8 +122,6 @@ func main() {
 		}
 
 		if e := proc(m); e != nil {
-			// TODO: Isolate deverr from senderr
-			// Processing trouble?
 			fmt.Println("WARN: Failed sending, retry in 20sec (msg=" + e.Error() + ")")
 			continue
 		}
